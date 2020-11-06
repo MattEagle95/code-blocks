@@ -1,6 +1,6 @@
 const winston = require('winston')
 require('winston-daily-rotate-file')
-const config = require('../../config/config.json')
+const consts = require('../config/consts.js')
 const path = require('path')
 
 const logFormat = winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
@@ -26,7 +26,7 @@ class Logger {
           format: winston.format.combine(
             logFormat
           ),
-          dirname: config.paths.logs,
+          dirname: consts.FILE_PATH_LOGS,
           filename: 'debug-%DATE%.log',
           datePattern: 'YYYY-MM-DD',
           maxSize: '20m',
@@ -37,7 +37,7 @@ class Logger {
           format: winston.format.combine(
             winston.format.json()
           ),
-          dirname: config.paths.logs + 'error/',
+          dirname: consts.FILE_PATH_LOGS + 'error/',
           filename: 'error-%DATE%.log',
           datePattern: 'YYYY-MM-DD',
           maxFiles: '30d',
@@ -48,7 +48,7 @@ class Logger {
           format: winston.format.combine(
             winston.format.json()
           ),
-          dirname: config.paths.logs + 'combined/',
+          dirname: consts.FILE_PATH_LOGS + 'combined/',
           filename: 'combined-%DATE%.log',
           datePattern: 'YYYY-MM-DD',
           maxFiles: '30d',

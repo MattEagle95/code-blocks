@@ -2,6 +2,8 @@ const express = require('express')
 const app = express()
 const port = 3000
 
+global.__basedir = __dirname;
+
 const loggerFactory = require('./core/services/logger')
 const logger = new loggerFactory().logger
 

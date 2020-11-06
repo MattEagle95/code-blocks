@@ -22,7 +22,7 @@ class BootstrapService {
 
       this.checkEnvironment()
 
-      if(Env.checkDevelopment()) {
+      if(Env.checkNodeEnvDevelopment()) {
         this.deleteDB()
       } else {
         if(this.checkDBFileExists()) {
@@ -36,7 +36,7 @@ class BootstrapService {
       this.createDB().then(() => {
           this.addConfigDBData()
           .then(() => {
-            if(Env.checkDevelopment()) {
+            if(Env.checkNodeEnvDevelopment()) {
             this.addDevelopmentDBData()
             .then(() => resolve())
             } else {
@@ -111,11 +111,11 @@ class BootstrapService {
   }
 
   checkEnvironment() {
-    if(!Env.getEnv())  {
+    if(!Env.getNodeEnv())  {
       logger.info('no NODE_ENV environment var found. setting it to development')
-      Env.setEnv("development")
+      Env.setNodeEnv("development")
     }
-    logger.info('environment: ' + Env.getEnv())
+    logger.info('environment: ' + Env.getNodeEnv())
   }
 }
 

@@ -1,6 +1,0 @@
-{
-  "paths": {
-    "storage": "storage/",
-    "logs": "storage/logs/"
-  }
-}
