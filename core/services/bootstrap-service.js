@@ -34,7 +34,6 @@ class BootstrapService {
       }
 
       this.createDB().then(() => {
-        if(Env.checkDevelopment()) {
           this.addConfigDBData()
           .then(() => {
             if(Env.checkDevelopment()) {
@@ -44,7 +43,6 @@ class BootstrapService {
               resolve()
             }
           })
-        }
       })
     })
   }
@@ -59,9 +57,6 @@ class BootstrapService {
     
     return new Promise((resolve, reject) => {
       configRepo.createTable()
-      .then(() => {
-        return configRepo.create('jwt_key', crypto.randomBytes(32).toString('hex'))
-      })
       .then(() => {
         return userRepo.createTable()
       })
@@ -103,7 +98,7 @@ class BootstrapService {
     const userRepo = new UserRepo()
     
     return new Promise((resolve, reject) => {
-      userRepo.create('Colin', bcrypt.hashSync('test', bcrypt.genSaltSync(10)))
+      userRepo.create('admin', bcrypt.hashSync('root', bcrypt.genSaltSync(10)))
       .then(() => {
         logger.info('development data inserted into db')
         resolve()
