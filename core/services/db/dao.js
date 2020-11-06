@@ -9,9 +9,9 @@ class AppDAO {
   constructor() {
     this.db = new sqlite3.Database('./db/db.sqlite3', (err) => {
       if (err) {
-        logger.info('Could not connect to database', err)
+        logger.info('could not connect to database', err)
       } else {
-        logger.info('Connected to database')
+        logger.info('connected to database')
       }
     })
   }

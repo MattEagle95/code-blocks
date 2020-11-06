@@ -27,6 +27,6 @@ const bootstrapService = new BootstrapService();
 bootstrapService.start()
 .then(() => {
   app.listen(port, () => {
-    logger.info(`Example app listening at http://localhost:${port}`)
+    logger.info(`server listening at http://localhost:${port}`)
   })
 })

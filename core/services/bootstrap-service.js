@@ -13,36 +13,49 @@ const UserRepo = require('./db/user-repository')
 const ConfigRepo = require('./db/config-repository')
 const { resolve } = require('bluebird')
 
+const dbFilePath = '../../db/db.sqlite3'
+
 class BootstrapService {
   start() {
-    logger.info('startup')
+    return new Promise((resolve, reject) => {
+      logger.info('startup')
 
-    this.checkEnvironment()
-    this.deleteDB()
-    
-    // if(Env.checkDevelopment()) {
-    //   logger.info('environment: development - deleting sqlite3 db file if exists and creating a new one.')
-    //   this.deleteDB()
-    // } else {
-    //   if(this.checkDBFileExists()) {
-    //     logger.info('no sqlite3 db file found. creating a new one.')
-    //   } else {
-    //     logger.info('sqlite3 db file found.')
-    //     return resolve(true)
-    //   }
-    // }
+      this.checkEnvironment()
 
-    return this.createDB()
+      if(Env.checkDevelopment()) {
+        this.deleteDB()
+      } else {
+        if(this.checkDBFileExists()) {
+          logger.info('no sqlite3 db file found. creating a new one.')
+        } else {
+          logger.info('sqlite3 db file found.')
+          return resolve()
+        }
+      }
+
+      this.createDB().then(() => {
+        if(Env.checkDevelopment()) {
+          this.addConfigDBData()
+          .then(() => {
+            if(Env.checkDevelopment()) {
+            this.addDevelopmentDBData()
+            .then(() => resolve())
+            } else {
+              resolve()
+            }
+          })
+        }
+      })
+    })
   }
 
   checkDBFileExists() {
-    return fs.existsSync('../../db/db.sqlite3')
+    return fs.existsSync(dbFilePath)
   }
 
   createDB() {
     const configRepo = new ConfigRepo()
     const userRepo = new UserRepo()
-    logger.info('createDB')
     
     return new Promise((resolve, reject) => {
       configRepo.createTable()
@@ -51,9 +64,6 @@ class BootstrapService {
       })
       .then(() => {
         return userRepo.createTable()
-      })
-      .then(() => {
-        return userRepo.create('Colin', bcrypt.hashSync('test', bcrypt.genSaltSync(10)))
       })
       .then(() => {
         logger.info('db.sqlite3 created')
@@ -68,9 +78,41 @@ class BootstrapService {
 
   deleteDB() {
     if(this.checkDBFileExists()) {
-      fs.unlinkSync('../../db/db.sqlite3')
+      fs.unlinkSync(dbFilePath)
       logger.info('db.sqlite3 deleted')
     }
+  }
+
+  addConfigDBData() {
+    const configRepo = new ConfigRepo()
+    
+    return new Promise((resolve, reject) => {
+      configRepo.create('jwt_key', crypto.randomBytes(32).toString('hex'))
+      .then(() => {
+        logger.info('config data inserted into db')
+        resolve()
+      })
+      .catch(error => {
+        logger.error('startup error: ' + error)
+        reject(error)
+      })
+    })
+  }
+
+  addDevelopmentDBData() {
+    const userRepo = new UserRepo()
+    
+    return new Promise((resolve, reject) => {
+      userRepo.create('Colin', bcrypt.hashSync('test', bcrypt.genSaltSync(10)))
+      .then(() => {
+        logger.info('development data inserted into db')
+        resolve()
+      })
+      .catch(error => {
+        logger.error('startup error: ' + error)
+        reject(error)
+      })
+    })
   }
 
   checkEnvironment() {
