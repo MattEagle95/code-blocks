@@ -24,3 +24,15 @@ test('check if node_env is development, false', () => {
 
   expect(Env.checkNodeEnvDevelopment()).toBe(false)
 });
+
+test('get port, port set in env', () => {
+  process.env.PORT = 1
+
+  expect(Env.getPort()).toBe(1)
+});
+
+test('get port, port not set in env', () => {
+  delete process.env.PORT
+
+  expect(Env.getPort()).toBe(consts.ENV_PORT)
+});

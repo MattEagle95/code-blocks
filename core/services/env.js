@@ -23,6 +23,10 @@ class Env {
   static getAbsolutePath(path) {
     return this.getBaseDir() + path
   }
+
+  static getPort() {
+    return parseInt(process.env.PORT) || parseInt(consts.ENV_PORT)
+  }
 }
 
 module.exports = Env

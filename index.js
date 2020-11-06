@@ -1,11 +1,11 @@
 const express = require('express')
 const app = express()
-const port = 3000
 
 global.__basedir = __dirname;
 
 const loggerFactory = require('./core/services/logger')
 const logger = new loggerFactory().logger
+const Env = require('./core/services/env')
 
 var cors = require('cors')
 app.use(cors())
@@ -24,11 +24,12 @@ app.use('/', routes)
 app.use('/api', apiRoutes)
 app.use('/auth', authRoutes)
 
+const port = Env.getPort();
 const BootstrapService = require('./core/services/bootstrap-service')
 const bootstrapService = new BootstrapService();
 bootstrapService.start()
 .then(() => {
   app.listen(port, () => {
-    logger.info(`server listening at http://localhost:${port}`)
+    logger.info(`server listening on port: ${port}`)
   })
 })
