@@ -7,13 +7,13 @@ class Env {
   static getNodeEnv() {
     return process.env.NODE_ENV
   }
+  
+  static setNodeEnv(stage) {
+    process.env.NODE_ENV = stage
+  }
 
   static checkNodeEnvDevelopment() {
     return process.env.NODE_ENV === consts.NODE_ENV_DEVELOPMENT
-  }
-
-  static setNodeEnv(stage) {
-    process.env.NODE_ENV = stage
   }
 
   static getBaseDir() {
