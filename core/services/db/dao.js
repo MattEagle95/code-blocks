@@ -8,14 +8,18 @@ const consts = require('../../config/consts.js')
 const Env = require('../env')
 
 class AppDAO {
-  constructor() {
-    this.db = new sqlite3.Database(Env.getAbsolutePath(consts.FILE_PATH_DB), (err) => {
-      if (err) {
-        logger.error('could not connect to database', err)
-      } else {
-        logger.info('connected to database')
-      }
-    })
+  init() {
+      return new Promise((resolve, reject) => {
+        this.db = new sqlite3.Database(Env.getAbsolutePath(consts.FILE_PATH_DB), (err) => {
+          if (err) {
+            logger.error('could not connect to database', err)
+            reject(err)
+          } else {
+            logger.info('connected to database')
+            resolve()
+          }
+        })
+      })
   }
 
   run(sql, params = []) {

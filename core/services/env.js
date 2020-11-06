@@ -8,8 +8,8 @@ class Env {
     return process.env.NODE_ENV
   }
   
-  static setNodeEnv(stage) {
-    process.env.NODE_ENV = stage
+  static setNodeEnv(env) {
+    process.env.NODE_ENV = env
   }
 
   static checkNodeEnvDevelopment() {

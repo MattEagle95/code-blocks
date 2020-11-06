@@ -5,15 +5,15 @@ const crypto = require('crypto')
 const bcrypt = require('bcryptjs')
 const Promise = require('bluebird')
 
+const consts = require('../config/consts.js')
 const Env = require('./env')
 const loggerFactory = require('./logger')
 const logger = new loggerFactory().logger
 
+const AppDAO = require('./db/dao')
 const UserRepo = require('./db/user-repository')
 const ConfigRepo = require('./db/config-repository')
 const { resolve } = require('bluebird')
-
-const dbFilePath = '../../db/db.sqlite3'
 
 class BootstrapService {
   start() {
@@ -26,29 +26,29 @@ class BootstrapService {
         this.deleteDB()
       } else {
         if(this.checkDBFileExists()) {
-          logger.info('no sqlite3 db file found. creating a new one.')
+          logger.info(`no ${consts.DB_NAME} file found. creating a new one.`)
         } else {
-          logger.info('sqlite3 db file found.')
+          logger.info(`${consts.DB_NAME} file found`)
           return resolve()
         }
       }
 
-      this.createDB().then(() => {
-          this.addConfigDBData()
-          .then(() => {
-            if(Env.checkNodeEnvDevelopment()) {
-            this.addDevelopmentDBData()
-            .then(() => resolve())
-            } else {
-              resolve()
-            }
-          })
+      AppDAO.init()
+      .then(() => { return this.createDB() })
+      .then(() => { return this.addConfigDBData() })
+      .then(() => {
+        if(Env.checkNodeEnvDevelopment()) {
+          this.addDevelopmentDBData()
+          .then(() => resolve())
+        } else {
+          resolve()
+        }
       })
     })
   }
 
   checkDBFileExists() {
-    return fs.existsSync(dbFilePath)
+    return fs.existsSync(Env.getAbsolutePath(consts.FILE_PATH_DB))
   }
 
   createDB() {
@@ -61,7 +61,7 @@ class BootstrapService {
         return userRepo.createTable()
       })
       .then(() => {
-        logger.info('db.sqlite3 created')
+        logger.info(`${consts.DB_NAME} created`)
         resolve()
       })
       .catch(error => {
@@ -73,8 +73,8 @@ class BootstrapService {
 
   deleteDB() {
     if(this.checkDBFileExists()) {
-      fs.unlinkSync(dbFilePath)
-      logger.info('db.sqlite3 deleted')
+      fs.unlinkSync(Env.getAbsolutePath(consts.FILE_PATH_DB))
+      logger.info(`${consts.DB_NAME} deleted`)
     }
   }
 
@@ -112,8 +112,8 @@ class BootstrapService {
 
   checkEnvironment() {
     if(!Env.getNodeEnv())  {
-      logger.info('no NODE_ENV environment var found. setting it to development')
-      Env.setNodeEnv("development")
+      logger.info(`no NODE_ENV environment var found. setting it to ${consts.NODE_ENV_DEVELOPMENT}`)
+      Env.setNodeEnv(consts.NODE_ENV_DEVELOPMENT)
     }
     logger.info('environment: ' + Env.getNodeEnv())
   }
