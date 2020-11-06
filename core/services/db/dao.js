@@ -2,19 +2,16 @@
 
 const sqlite3 = require('sqlite3').verbose()
 const Promise = require('bluebird')
+const loggerFactory = require('../logger')
+const logger = new loggerFactory().logger
 
 class AppDAO {
   constructor() {
-    var fs = require('fs');
-    if(fs.existsSync('./db/db.sqlite3')) {
-      console.log('deleted db.sqlite3')
-    fs.unlinkSync('./db/db.sqlite3');
-    }
     this.db = new sqlite3.Database('./db/db.sqlite3', (err) => {
       if (err) {
-        console.log('Could not connect to database', err)
+        logger.info('Could not connect to database', err)
       } else {
-        console.log('Connected to database')
+        logger.info('Connected to database')
       }
     })
   }
@@ -27,7 +24,6 @@ class AppDAO {
           console.log(err)
           reject(err)
         } else {
-          console.log('success ' + { id: this.lastID })
           resolve({ id: this.lastID })
         }
       })

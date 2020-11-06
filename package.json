@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node index",
+    "start": "cross-env NODE_ENV=development node index",
     "test": "jest"
   },
   "author": "",
@@ -23,9 +23,12 @@
     "mongo": "^0.1.0",
     "mongoose": "^5.10.12",
     "pm2": "^4.4.1",
-    "sqlite3": "^5.0.0"
+    "sqlite3": "^5.0.0",
+    "winston": "^3.3.3",
+    "winston-daily-rotate-file": "^4.5.0"
   },
   "devDependencies": {
+    "cross-env": "^7.0.2",
     "jest": "^26.6.3"
   }
 }

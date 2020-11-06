@@ -1,18 +1,16 @@
 const express = require('express')
-var cors = require('cors')
 const app = express()
 const port = 3000
+
+const loggerFactory = require('./core/services/logger')
+const logger = new loggerFactory().logger
+
+var cors = require('cors')
 app.use(cors())
+
 var bodyParser = require('body-parser')
-app.use(bodyParser.json());       // to support JSON-encoded bodies
-app.use(bodyParser.urlencoded({ extended: true })); 
-var pm2 = require('pm2')
-const e = require('express')
-const Configstore = require('configstore')
-const config = new Configstore("test", {foo: 'bar'});
-config.set('awesome', true);
-console.log(config.path);
-let mongoose = require('mongoose');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 //Import routes
 let routes = require("./core/routes/routes")
@@ -24,21 +22,11 @@ app.use('/', routes)
 app.use('/api', apiRoutes)
 app.use('/auth', authRoutes)
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-})
-
-const UserRepo = require('./core/services/db/user-repository')
-const AuthService = require('./core/services/auth-service')
-
-const userRepo = new UserRepo()
-
-const bcrypt = require('bcryptjs')
-
-userRepo.createTable()
+const BootstrapService = require('./core/services/bootstrap-service')
+const bootstrapService = new BootstrapService();
+bootstrapService.start()
 .then(() => {
-  let hash = bcrypt.hashSync('test', bcrypt.genSaltSync(10));
-  console.log("HASH: " + hash)
-  userRepo.create('Colin', hash)
+  app.listen(port, () => {
+    logger.info(`Example app listening at http://localhost:${port}`)
+  })
 })
-
