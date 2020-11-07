@@ -6,14 +6,13 @@ const bcrypt = require('bcryptjs')
 const Promise = require('bluebird')
 
 const consts = require('../config/consts.js')
-const Env = require('./env')
-const LoggerFactory = require('./logger')
-const logger = new LoggerFactory().logger
+const Env = require('../util/env')
+const logger = require('..//util/logger-factory').getLogger()
 
-const AppDAO = require('./db/dao')
-const ConfigRepo = require('./db/config-repository')
-const UserRepo = require('./db/user-repository')
-const TokenRepo = require('./db/token-repository')
+const AppDAO = require('../db/dao')
+const ConfigRepo = require('../db/config-repository')
+const UserRepo = require('../db/user-repository')
+const TokenRepo = require('../db/token-repository')
 
 class BootstrapService {
   constructor () {

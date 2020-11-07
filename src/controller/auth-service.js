@@ -1,15 +1,14 @@
 'use strict'
 
-const ConfigRepo = require('./db/config-repository')
-const UserRepository = require('./db/user-repository')
-const TokenRepository = require('./db/token-repository')
+const ConfigRepo = require('../db/config-repository')
+const UserRepository = require('../db/user-repository')
+const TokenRepository = require('../db/token-repository')
 
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 const consts = require('../config/consts.js')
-const LoggerFactory = require('./logger')
-const logger = new LoggerFactory().logger
+const logger = require('../util/logger-factory').getLogger()
 
 class AuthService {
   constructor () {

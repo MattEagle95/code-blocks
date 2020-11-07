@@ -1,5 +1,6 @@
-// initialize express router
 const router = require('express').Router()
+const pm2 = require('pm2')
+
 router.get('/status', (req, res) => {
   pm2.connect(function (err) {
     if (err) {

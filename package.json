@@ -22,7 +22,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongo": "^0.1.0",
     "mongoose": "^5.10.12",
-    "pm2": "^4.4.1",
+    "pm2": "^4.5.0",
     "sqlite3": "^5.0.0",
     "winston": "^3.3.3",
     "winston-daily-rotate-file": "^4.5.0"

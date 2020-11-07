@@ -2,10 +2,10 @@
 
 const sqlite3 = require('sqlite3').verbose()
 const Promise = require('bluebird')
-const LoggerFactory = require('../logger')
+const LoggerFactory = require('../services/logger')
 const logger = new LoggerFactory().logger
-const consts = require('../../config/consts.js')
-const Env = require('../env')
+const consts = require('../config/consts.js.js')
+const Env = require('../services/env')
 const { resolve, reject } = require('bluebird')
 
 class AppDAO {

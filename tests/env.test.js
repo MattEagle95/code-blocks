@@ -1,5 +1,5 @@
-const consts = require('../core/config/consts.js')
-const Env = require('../core/services/env')
+const consts = require('../src/config/consts.js')
+const Env = require('../src/util/env')
 
 test('get node env', () => {
   process.env.NODE_ENV = 'get_env'

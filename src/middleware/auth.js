@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 const consts = require('../config/consts')
-const TokenRepo = require('../services/db/token-repository')
-const ConfigRepo = require('../services/db/config-repository')
+const TokenRepo = require('../db/token-repository')
+const ConfigRepo = require('../db/config-repository')
 
 const auth = async (req, res, next) => {
   const tokenRepo = new TokenRepo()

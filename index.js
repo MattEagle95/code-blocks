@@ -3,9 +3,8 @@ const app = express()
 
 global.__basedir = __dirname
 
-const LoggerFactory = require('./core/services/logger')
-const logger = new LoggerFactory().logger
-const Env = require('./core/services/env')
+const logger = require('./src/util/logger-factory').getLogger()
+const Env = require('./src/util/env')
 
 const cors = require('cors')
 app.use(cors())
@@ -15,9 +14,9 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 // Import routes
-const routes = require('./core/routes/routes')
-const apiRoutes = require('./core/routes/api-routes')
-const authRoutes = require('./core/routes/auth-routes')
+const routes = require('./src/routes/routes')
+const apiRoutes = require('./src/routes/api-routes')
+const authRoutes = require('./src/routes/auth-routes')
 
 // Use API routes in the App
 app.use('/', routes)
@@ -25,7 +24,7 @@ app.use('/api', apiRoutes)
 app.use('/auth', authRoutes)
 
 const port = Env.getPort()
-const BootstrapService = require('./core/services/bootstrap-service')
+const BootstrapService = require('./src/controller/bootstrap-service')
 const bootstrapService = new BootstrapService()
 bootstrapService.start()
   .then(() => {

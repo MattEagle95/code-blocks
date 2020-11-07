@@ -1,15 +1,14 @@
 const winston = require('winston')
 require('winston-daily-rotate-file')
 const consts = require('../config/consts.js')
-const path = require('path')
 
 const logFormat = winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
 
-class Logger {
-  constructor () {
-    this.logger = winston.createLogger({
+class LoggerFactory {
+  static getLogger () {
+    return winston.createLogger({
       format: winston.format.combine(
-        winston.format.timestamp({format: 'YYYY-MM-DD HH:mm:ss'}),
+        winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
         winston.format.metadata({ fillExcept: ['message', 'level', 'timestamp'] })
       ),
       transports: [
@@ -60,4 +59,4 @@ class Logger {
   }
 }
 
-module.exports = Logger
+module.exports = LoggerFactory
