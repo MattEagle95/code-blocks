@@ -2,20 +2,24 @@
 
 const sqlite3 = require('sqlite3').verbose()
 const Promise = require('bluebird')
-const logger = require('../util/logger-factory').getLogger()
+const LoggerFactory = require('../util/logger-factory')
 const consts = require('../config/consts.js')
 const Env = require('../util/env')
 const { resolve, reject } = require('bluebird')
 
 class AppDAO {
+  constructor () {
+    this.logger = LoggerFactory.Logger(this.constructor.name)
+  }
+
   init () {
     return new Promise((resolve, reject) => {
       this.db = new sqlite3.Database(Env.getAbsolutePath(consts.FILE_PATH_DB), (err) => {
         if (err) {
-          logger.error('could not connect to database', err)
+          this.logger.error('could not connect to database', err)
           reject(err)
         } else {
-          logger.info('connected to database')
+          this.logger.info('connected to database')
           resolve()
         }
       })

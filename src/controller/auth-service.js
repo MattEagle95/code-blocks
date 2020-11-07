@@ -8,7 +8,7 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 const consts = require('../config/consts.js')
-const logger = require('../util/logger-factory').getLogger()
+const logger = require('../util/logger-factory').Logger()
 
 class AuthService {
   constructor () {

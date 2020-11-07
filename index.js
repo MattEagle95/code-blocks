@@ -3,7 +3,7 @@ const app = express()
 
 global.__basedir = __dirname
 
-const logger = require('./src/util/logger-factory').getLogger()
+const logger = require('./src/util/logger-factory').Logger('index')
 const Env = require('./src/util/env')
 
 const cors = require('cors')

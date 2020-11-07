@@ -7,7 +7,7 @@ const Promise = require('bluebird')
 
 const consts = require('../config/consts.js')
 const Env = require('../util/env')
-const logger = require('..//util/logger-factory').getLogger()
+const LoggerFactory = require('..//util/logger-factory')
 
 const AppDAO = require('../db/dao')
 const ConfigRepo = require('../db/config-repository')
@@ -16,6 +16,7 @@ const TokenRepo = require('../db/token-repository')
 
 class BootstrapService {
   constructor () {
+    this.logger = LoggerFactory.Logger(this.constructor.name)
     this.configRepo = new ConfigRepo()
     this.userRepo = new UserRepo()
     this.tokenRepo = new TokenRepo()
@@ -23,7 +24,7 @@ class BootstrapService {
 
   start () {
     return new Promise((resolve, reject) => {
-      logger.info('startup')
+      this.logger.info('startup')
 
       this.checkEnvironment()
 
@@ -31,9 +32,9 @@ class BootstrapService {
         this.deleteDB()
       } else {
         if (this.checkDBFileExists()) {
-          logger.info(`no ${consts.DB_NAME} file found. creating a new one.`)
+          this.logger.info(`no ${consts.DB_NAME} file found. creating a new one.`)
         } else {
-          logger.info(`${consts.DB_NAME} file found`)
+          this.logger.info(`${consts.DB_NAME} file found`)
           return resolve()
         }
       }
@@ -66,11 +67,11 @@ class BootstrapService {
           return this.tokenRepo.createTable()
         })
         .then(() => {
-          logger.info(`${consts.DB_NAME} created`)
+          this.logger.info(`${consts.DB_NAME} created`)
           resolve()
         })
         .catch(error => {
-          logger.error('startup error: ' + error)
+          this.logger.error('startup error: ' + error)
           reject(error)
         })
     })
@@ -79,7 +80,7 @@ class BootstrapService {
   deleteDB () {
     if (this.checkDBFileExists()) {
       fs.unlinkSync(Env.getAbsolutePath(consts.FILE_PATH_DB))
-      logger.info(`${consts.DB_NAME} deleted`)
+      this.logger.info(`${consts.DB_NAME} deleted`)
     }
   }
 
@@ -87,11 +88,11 @@ class BootstrapService {
     return new Promise((resolve, reject) => {
       this.configRepo.create(consts.CONFIG_KEYS.JWT_TOKEN, crypto.randomBytes(32).toString('hex'))
         .then(() => {
-          logger.info('config data inserted into db')
+          this.logger.info('config data inserted into db')
           resolve()
         })
         .catch(error => {
-          logger.error('startup error: ' + error)
+          this.logger.error('startup error: ' + error)
           reject(error)
         })
     })
@@ -101,11 +102,11 @@ class BootstrapService {
     return new Promise((resolve, reject) => {
       this.userRepo.create('admin', bcrypt.hashSync('root', bcrypt.genSaltSync(10)))
         .then(() => {
-          logger.info('development data inserted into db')
+          this.logger.info('development data inserted into db')
           resolve()
         })
         .catch(error => {
-          logger.error('startup error: ' + error)
+          this.logger.error('startup error: ' + error)
           reject(error)
         })
     })
@@ -113,10 +114,10 @@ class BootstrapService {
 
   checkEnvironment () {
     if (!Env.getNodeEnv()) {
-      logger.info(`no NODE_ENV environment var found. setting it to ${consts.NODE_ENV_DEVELOPMENT}`)
+      this.logger.info(`no NODE_ENV environment var found. setting it to ${consts.NODE_ENV_DEVELOPMENT}`)
       Env.setNodeEnv(consts.NODE_ENV_DEVELOPMENT)
     }
-    logger.info('environment: ' + Env.getNodeEnv())
+    this.logger.info('environment: ' + Env.getNodeEnv())
   }
 }
 
