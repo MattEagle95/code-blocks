@@ -8,6 +8,12 @@ class TokenRepository {
     this.tableName = 'Token'
   }
 
+  findByUserIdAndToken (userId, token) {
+    return this.dao.get(
+      `SELECT * FROM ${this.tableName} WHERE user_id = ? AND token = ?`,
+      [userId, token])
+  }
+
   getById (id) {
     return this.dao.get(
       `SELECT * FROM ${this.tableName} WHERE id = ?`,

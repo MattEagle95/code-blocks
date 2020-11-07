@@ -1,15 +1,26 @@
 const jwt = require('jsonwebtoken')
-const UserRepo = require('../services/db/user-repository')
+const consts = require('../config/consts')
+const TokenRepo = require('../services/db/token-repository')
+const ConfigRepo = require('../services/db/config-repository')
 
 const auth = async (req, res, next) => {
-  const userRepo = new UserRepo()
+  const tokenRepo = new TokenRepo()
+  const configRepo = new ConfigRepo()
 
-  const token = req.header('Authorization').replace('Bearer ', '')
-  const data = jwt.verify(token, process.env.JWT_KEY)
+  configRepo.getByConfigKey(consts.CONFIG_KEYS.JWT_TOKEN)
+    .then(config => {
+      const token = req.header('Authorization').replace('Bearer ', '')
+      const data = jwt.verify(token, config.config_value)
 
-  userRepo.findByIdAndToken(data.id)
-    .then(user => {
-
+      tokenRepo.findByUserIdAndToken(data.id)
+        .then(token => {
+          console.log('found')
+          req.token = token
+          next()
+        })
+        .catch(error => {
+          res.status(401).status({ error: error })
+        })
     })
 }
 module.exports = auth
