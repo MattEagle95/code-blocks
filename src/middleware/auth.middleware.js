@@ -1,11 +1,11 @@
 const jwt = require('jsonwebtoken')
 const consts = require('../config/consts')
-const TokenRepo = require('../db/token-repository')
-const ConfigRepo = require('../db/config-repository')
+const ConfigRepository = require('../db/config.repository')
+const TokenRepository = require('../db/token.repository')
 
-const auth = async (req, res, next) => {
-  const tokenRepo = new TokenRepo()
-  const configRepo = new ConfigRepo()
+const authMiddleware = async (req, res, next) => {
+  const tokenRepo = new TokenRepository()
+  const configRepo = new ConfigRepository()
 
   configRepo.getByConfigKey(consts.CONFIG_KEYS.JWT_TOKEN)
     .then(config => {
@@ -23,4 +23,4 @@ const auth = async (req, res, next) => {
         })
     })
 }
-module.exports = auth
+module.exports = authMiddleware

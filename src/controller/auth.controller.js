@@ -1,8 +1,8 @@
 'use strict'
 
-const ConfigRepo = require('../db/config-repository')
-const UserRepository = require('../db/user-repository')
-const TokenRepository = require('../db/token-repository')
+const ConfigRepository = require('../db/config.repository')
+const UserRepository = require('../db/user.repository')
+const TokenRepository = require('../db/token.repository')
 
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
@@ -10,34 +10,23 @@ const jwt = require('jsonwebtoken')
 const consts = require('../config/consts.js')
 const logger = require('../util/logger-factory').Logger()
 
-const { body } = require('express-validator')
-
 class AuthController {
   constructor () {
     this.userRepository = new UserRepository()
-    this.configRepo = new ConfigRepo()
+    this.configRepository = new ConfigRepository()
     this.tokenRepository = new TokenRepository()
   }
 
-  auth (val = false) {
-    if (val) {
-      return [
-        body('name').isString(),
-        body('password').isString()
-      ]
-    }
-
-    return function (req, res) {
-      const { name, password } = req.body
-
+  auth (name, password) {
+    return new Promise((resolve, reject) => {
       this.login(name, password)
         .then(token => {
-          res.status(201).send(token)
+          resolve(token)
         })
         .catch(error => {
-          res.status(400).send(error)
+          reject(error)
         })
-    }
+    })
   }
 
   login (name, _password) {
@@ -74,7 +63,7 @@ class AuthController {
   generateAuthToken (_user) {
     const user = _user
     return new Promise((resolve, reject) => {
-      this.configRepo.getByConfigKey(consts.CONFIG_KEYS.JWT_TOKEN)
+      this.configRepository.getByConfigKey(consts.CONFIG_KEYS.JWT_TOKEN)
         .then(config => {
           resolve({ user: user, token: jwt.sign({ id: user.id }, config.config_value) })
         })
@@ -82,4 +71,4 @@ class AuthController {
   }
 }
 
-module.exports = new AuthController()
+module.exports = AuthController

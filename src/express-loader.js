@@ -6,9 +6,9 @@ const bodyParser = require('body-parser')
 const Env = require('./util/env')
 const LoggerFactory = require('./util/logger-factory')
 
-const routes = require('./routes/routes')
-const apiRoutes = require('./routes/api-routes')
-const authRoutes = require('./routes/auth-routes')
+const apiRoutes = require('./routes/pm2.routes')
+const authRoutes = require('./routes/auth.routes')
+const userRoutes = require('./routes/user.routes')
 
 class ExpressLoader {
   constructor () {
@@ -16,8 +16,8 @@ class ExpressLoader {
   }
 
   start () {
-    const port = Env.getPort()
     const app = express()
+    const port = Env.getPort()
 
     app.use(cors())
     app.use(bodyParser.json())
@@ -31,9 +31,9 @@ class ExpressLoader {
   }
 
   registerRoutes (app) {
-    app.use('/', routes)
     app.use('/api', apiRoutes)
     app.use('/auth', authRoutes)
+    app.use('/user', userRoutes)
   }
 }
 

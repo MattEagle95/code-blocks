@@ -10,16 +10,16 @@ const Env = require('./util/env')
 const LoggerFactory = require('./util/logger-factory')
 
 const DB = require('./db/db')
-const ConfigRepo = require('./db/config-repository')
-const UserRepo = require('./db/user-repository')
-const TokenRepo = require('./db/token-repository')
+const ConfigRepository = require('./db/config.repository')
+const UserRepository = require('./db/user.repository')
+const TokenRepository = require('./db/token.repository')
 
 class BootstrapService {
   constructor () {
     this.logger = LoggerFactory.Logger(this.constructor.name)
-    this.configRepo = new ConfigRepo()
-    this.userRepo = new UserRepo()
-    this.tokenRepo = new TokenRepo()
+    this.configRepo = new ConfigRepository()
+    this.userRepo = new UserRepository()
+    this.tokenRepo = new TokenRepository()
   }
 
   start () {
