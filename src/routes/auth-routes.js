@@ -1,21 +1,10 @@
+const AuthController = require('../controller/auth-controller')
 const auth = require('../middleware/auth')
-const AuthService = require('../controller/auth-service')
+const validate = require('../middleware/validate')
 
 const router = require('express').Router()
 
-router.post('/login', (req, res) => {
-  const authService = new AuthService()
-  authService.login(req.body.name, req.body.password)
-    .then(token => {
-      res.status(201).send(token)
-    })
-    .catch(error => {
-      res.status(400).send(error)
-    })
-})
-
-router.get('/auth-test', auth, (req, res) => {
-  res.send('hi')
-})
+router.post('/login', AuthController.auth(true), validate, AuthController.auth())
+router.post('/logout', auth, AuthController.auth(true), validate, AuthController.auth())
 
 module.exports = router
