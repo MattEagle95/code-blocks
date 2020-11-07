@@ -1,38 +1,57 @@
-"use strict";
+'use strict'
 
-const express = require('express')
-const UserRepository = require('./db/user-repository');
+const ConfigRepo = require('./db/config-repository')
+const UserRepository = require('./db/user-repository')
 
 const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken');
-const { reject } = require('bluebird');
+const jwt = require('jsonwebtoken')
+
+const consts = require('../config/consts.js')
+const LoggerFactory = require('./logger')
+const logger = new LoggerFactory().logger
 
 class AuthService {
-
-  constructor() {
-    this.userRepository = new UserRepository();
+  constructor () {
+    this.userRepository = new UserRepository()
+    this.configRepo = new ConfigRepo()
   }
 
-  generateAuthToken(user) {
-    return jwt.sign({id: user.id}, 'test')
+  generateAuthToken (_user) {
+    const user = _user
+    return new Promise((resolve, reject) => {
+      this.configRepo.getByConfigKey(consts.CONFIG_KEYS.JWT_TOKEN)
+        .then(config => {
+          logger.info(config)
+          resolve(jwt.sign({ id: user.id }, config.config_value))
+        })
+    })
   }
 
-  login(name, password) {
-    return this.userRepository.getByName(name).then((user) => {
-      if(!user) {
-        console.error('user not found')
-        reject('user not found')
-      }
+  login (name, _password) {
+    const password = _password
+    return new Promise((resolve, reject) => {
+      this.userRepository.getByName(name)
+        .then(user => {
+          if (!user) {
+            logger.error('user not found')
+            reject(new Error('user not found'))
+          }
 
-      if(!bcrypt.compareSync(password, user.password)) {
-        console.error('password incorrect')
-        reject('password incorrect')
-      }
+          if (!bcrypt.compareSync(password, user.password)) {
+            logger.error('password incorrect')
+            reject(new Error('password incorrect'))
+          }
 
-      console.log('login successful')
-
-      return this.generateAuthToken(user)
-    });
+          logger.info('login successful')
+          resolve(user)
+        })
+        .then(user => {
+          this.generateAuthToken(user)
+            .then(() => {
+              resolve()
+            })
+        })
+    })
   }
 }
 

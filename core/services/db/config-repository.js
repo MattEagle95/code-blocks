@@ -1,33 +1,32 @@
-"use strict";
+'use strict'
 
 const AppDAO = require('./dao')
 
 class ConfigRepository {
-
-  constructor() {
+  constructor () {
     this.dao = AppDAO
-    this.tableName = 'Config';
+    this.tableName = 'Config'
   }
 
-  getById(id) {
+  getById (id) {
     return this.dao.get(
       `SELECT * FROM ${this.tableName} WHERE id = ?`,
       [id])
   }
 
-  getByConfigKey(configKey) {
+  getByConfigKey (configKey) {
     return this.dao.get(
       `SELECT * FROM ${this.tableName} WHERE config_key = ?`,
       [configKey])
   }
 
-  create(configKey, configValue) {
+  create (configKey, configValue) {
     return this.dao.run(
       `INSERT INTO ${this.tableName} (config_key, config_value) VALUES (?, ?)`,
       [configKey, configValue])
   }
 
-  createTable() {
+  createTable () {
     const sql = `
     CREATE TABLE IF NOT EXISTS ${this.tableName} (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -38,4 +37,4 @@ class ConfigRepository {
   }
 }
 
-module.exports = ConfigRepository;
+module.exports = ConfigRepository

@@ -3,28 +3,28 @@
 const consts = require('../config/consts.js')
 
 class Env {
-
-  static getNodeEnv() {
+  static getNodeEnv () {
     return process.env.NODE_ENV
   }
-  
-  static setNodeEnv(env) {
+
+  static setNodeEnv (env) {
     process.env.NODE_ENV = env
   }
 
-  static checkNodeEnvDevelopment() {
+  static checkNodeEnvDevelopment () {
     return process.env.NODE_ENV === consts.NODE_ENV_DEVELOPMENT
   }
 
-  static getBaseDir() {
+  static getBaseDir () {
+    // eslint-disable-next-line no-undef
     return __basedir + '\\'
   }
 
-  static getAbsolutePath(path) {
+  static getAbsolutePath (path) {
     return this.getBaseDir() + path
   }
 
-  static getPort() {
+  static getPort () {
     return parseInt(process.env.PORT) || parseInt(consts.ENV_PORT)
   }
 }

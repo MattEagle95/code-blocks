@@ -1,28 +1,29 @@
-"use strict";
+'use strict'
 
 const sqlite3 = require('sqlite3').verbose()
 const Promise = require('bluebird')
-const loggerFactory = require('../logger')
-const logger = new loggerFactory().logger
+const LoggerFactory = require('../logger')
+const logger = new LoggerFactory().logger
 const consts = require('../../config/consts.js')
 const Env = require('../env')
+const { resolve, reject } = require('bluebird')
 
 class AppDAO {
-  init() {
-      return new Promise((resolve, reject) => {
-        this.db = new sqlite3.Database(Env.getAbsolutePath(consts.FILE_PATH_DB), (err) => {
-          if (err) {
-            logger.error('could not connect to database', err)
-            reject(err)
-          } else {
-            logger.info('connected to database')
-            resolve()
-          }
-        })
+  init () {
+    return new Promise((resolve, reject) => {
+      this.db = new sqlite3.Database(Env.getAbsolutePath(consts.FILE_PATH_DB), (err) => {
+        if (err) {
+          logger.error('could not connect to database', err)
+          reject(err)
+        } else {
+          logger.info('connected to database')
+          resolve()
+        }
       })
+    })
   }
 
-  run(sql, params = []) {
+  run (sql, params = []) {
     return new Promise((resolve, reject) => {
       this.db.run(sql, params, function (err) {
         if (err) {
@@ -35,8 +36,8 @@ class AppDAO {
       })
     })
   }
-  
-  get(sql, params = []) {
+
+  get (sql, params = []) {
     return new Promise((resolve, reject) => {
       this.db.get(sql, params, (err, result) => {
         if (err) {
@@ -50,16 +51,16 @@ class AppDAO {
     })
   }
 
-  all(sql, params = []) {
-      this.db.all(sql, params, (err, rows) => {
-        if (err) {
-          console.log('Error running sql: ' + sql)
-          console.log(err)
-          reject(err)
-        } else {
-          resolve(rows)
-        }
-      })
+  all (sql, params = []) {
+    this.db.all(sql, params, (err, rows) => {
+      if (err) {
+        console.log('Error running sql: ' + sql)
+        console.log(err)
+        reject(err)
+      } else {
+        resolve(rows)
+      }
+    })
   }
 }
 

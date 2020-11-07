@@ -2,45 +2,48 @@
 
 const AppDAO = require('./dao')
 
-class UserRepository {
+class TokenRepository {
   constructor () {
     this.dao = AppDAO
+    this.tableName = 'Token'
   }
 
   getById (id) {
     return this.dao.get(
-      'SELECT * FROM User WHERE id = ?',
+      `SELECT * FROM ${this.tableName} WHERE id = ?`,
       [id])
   }
 
   getByName (name) {
     return this.dao.get(
-      'SELECT * FROM User WHERE name = ?',
+      `SELECT * FROM ${this.tableName} WHERE name = ?`,
       [name])
   }
 
   create (name, password) {
     return this.dao.run(
-      'INSERT INTO User (name, password) VALUES (?, ?)',
+      `INSERT INTO ${this.tableName} (name, password) VALUES (?, ?)`,
       [name, password])
   }
 
   delete (id) {
     return this.dao.run(
-      'DELETE FROM User WHERE id = ?',
+      `DELETE FROM ${this.tableName} WHERE id = ?`,
       [id]
     )
   }
 
   createTable () {
     const sql = `
-    CREATE TABLE IF NOT EXISTS User (
+    CREATE TABLE IF NOT EXISTS ${this.tableName} (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name varchar(255) NOT NULL,
-      password varchar(255) NOT NULL
+      user_id INTEGER NOT NULL,
+      token TEXT NOT NULL,
+
+      FOREIGN KEY(user_id) REFERENCES User(id)
     );`
     return this.dao.run(sql)
   }
 }
 
-module.exports = UserRepository
+module.exports = TokenRepository
