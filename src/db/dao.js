@@ -2,8 +2,7 @@
 
 const sqlite3 = require('sqlite3').verbose()
 const Promise = require('bluebird')
-const LoggerFactory = require('../util/logger-factory')
-const logger = new LoggerFactory().logger
+const logger = require('../util/logger-factory').getLogger()
 const consts = require('../config/consts.js')
 const Env = require('../util/env')
 const { resolve, reject } = require('bluebird')
