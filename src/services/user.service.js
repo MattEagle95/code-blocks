@@ -23,6 +23,18 @@ class UserService {
     })
   }
 
+  findByName (name) {
+    return new Promise((resolve, reject) => {
+      this.userRepo.findByName(name)
+        .then(user => {
+          resolve(user)
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
+  }
+
   getAll () {
     return new Promise((resolve, reject) => {
       this.userRepo.getAll()

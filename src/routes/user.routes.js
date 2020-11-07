@@ -34,7 +34,13 @@ router.get('/:id', [
 router.post('/', validateMiddleware, [
   body('name').notEmpty().ltrim().rtrim(),
   body('password').notEmpty(),
-  body('passwordAgain').notEmpty()
+  body('passwordConfirmation').custom((value, { req }) => {
+    if (value !== req.body.password) {
+      throw new Error('Password confirmation does not match password')
+    }
+
+    return true
+  })
 ], (req, res) => {
   const { name, password } = req.body
 
@@ -51,7 +57,13 @@ router.put('/', authMiddleware, [
   body('id').isInt(),
   body('name').notEmpty().ltrim().rtrim(),
   body('password').notEmpty(),
-  body('passwordAgain').notEmpty()
+  body('passwordConfirmation').custom((value, { req }) => {
+    if (value !== req.body.password) {
+      throw new Error('Password confirmation does not match password')
+    }
+
+    return true
+  })
 ], (req, res) => {
   const { id, name, password } = req.body
 

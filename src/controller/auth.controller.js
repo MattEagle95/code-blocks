@@ -1,71 +1,45 @@
 'use strict'
 
 const ConfigRepository = require('../db/config.repository')
-const UserRepository = require('../db/user.repository')
 const TokenRepository = require('../db/token.repository')
 
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 const consts = require('../config/consts.js')
-const logger = require('../util/logger-factory').Logger()
+const UserService = require('../services/user.service')
 
 class AuthController {
   constructor () {
-    this.userRepository = new UserRepository()
+    this.userService = new UserService()
     this.configRepository = new ConfigRepository()
     this.tokenRepository = new TokenRepository()
   }
 
-  auth (name, password) {
-    return new Promise((resolve, reject) => {
-      this.login(name, password)
-        .then(token => {
-          resolve(token)
-        })
-        .catch(error => {
-          reject(error)
-        })
-    })
-  }
-
-  login (name, _password) {
+  auth (name, _password) {
     const password = _password
     return new Promise((resolve, reject) => {
-      this.userRepository.getByName(name)
+      this.userService.findByName(name)
         .then(user => {
           if (!user) {
-            logger.error('user not found')
             reject(new Error('user not found'))
           }
 
           if (!bcrypt.compareSync(password, user.password)) {
-            logger.error('password incorrect')
             reject(new Error('password incorrect'))
           }
 
-          logger.info('login successful')
           return user
         })
-        .then(user => {
-          this.generateAuthToken(user)
-            .then(data => {
-              const token = data.token
-              this.tokenRepository.create(data.user.id, token)
-                .then(() => {
-                  resolve(token)
-                })
+        .then(_user => {
+          const user = _user
+          this.configRepository.getByConfigKey(consts.CONFIG_KEYS.JWT_TOKEN)
+            .then(config => {
+              resolve({ user: user, token: jwt.sign({ id: user.id }, config.config_value) })
             })
         })
-    })
-  }
-
-  generateAuthToken (_user) {
-    const user = _user
-    return new Promise((resolve, reject) => {
-      this.configRepository.getByConfigKey(consts.CONFIG_KEYS.JWT_TOKEN)
-        .then(config => {
-          resolve({ user: user, token: jwt.sign({ id: user.id }, config.config_value) })
+        .catch(error => {
+          reject(error)
         })
     })
   }

@@ -13,6 +13,12 @@ class UserRepository {
       [id])
   }
 
+  findByName (name) {
+    return this.db.get(
+      'SELECT * FROM User WHERE name = ?',
+      [name])
+  }
+
   getAll () {
     return this.db.get(
       'SELECT * FROM User'
