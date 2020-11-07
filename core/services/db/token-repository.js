@@ -20,10 +20,10 @@ class TokenRepository {
       [name])
   }
 
-  create (name, password) {
+  create (userId, token) {
     return this.dao.run(
-      `INSERT INTO ${this.tableName} (name, password) VALUES (?, ?)`,
-      [name, password])
+      `INSERT INTO ${this.tableName} (user_id, token) VALUES (?, ?)`,
+      [userId, token])
   }
 
   delete (id) {

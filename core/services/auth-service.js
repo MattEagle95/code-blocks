@@ -2,6 +2,7 @@
 
 const ConfigRepo = require('./db/config-repository')
 const UserRepository = require('./db/user-repository')
+const TokenRepository = require('./db/token-repository')
 
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
@@ -14,6 +15,7 @@ class AuthService {
   constructor () {
     this.userRepository = new UserRepository()
     this.configRepo = new ConfigRepo()
+    this.tokenRepository = new TokenRepository()
   }
 
   generateAuthToken (_user) {
@@ -21,8 +23,7 @@ class AuthService {
     return new Promise((resolve, reject) => {
       this.configRepo.getByConfigKey(consts.CONFIG_KEYS.JWT_TOKEN)
         .then(config => {
-          logger.info(config)
-          resolve(jwt.sign({ id: user.id }, config.config_value))
+          resolve({ user: user, token: jwt.sign({ id: user.id }, config.config_value) })
         })
     })
   }
@@ -43,12 +44,16 @@ class AuthService {
           }
 
           logger.info('login successful')
-          resolve(user)
+          return user
         })
         .then(user => {
           this.generateAuthToken(user)
-            .then(() => {
-              resolve()
+            .then(data => {
+              const token = data.token
+              this.tokenRepository.create(data.user.id, token)
+                .then(() => {
+                  resolve(token)
+                })
             })
         })
     })

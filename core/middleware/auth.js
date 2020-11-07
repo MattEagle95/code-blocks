@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const UserRepo = require('./db/user-repository')
+const UserRepo = require('../services/db/user-repository')
 
 const auth = async (req, res, next) => {
   const userRepo = new UserRepo()

@@ -1,3 +1,4 @@
+const auth = require('../middleware/auth')
 const AuthService = require('../services/auth-service')
 
 const router = require('express').Router()
@@ -11,6 +12,10 @@ router.post('/login', (req, res) => {
     .catch(error => {
       res.status(400).send(error)
     })
+})
+
+router.get('/auth-test', auth, (req, res) => {
+  res.send('hi')
 })
 
 module.exports = router

@@ -11,10 +11,17 @@ const LoggerFactory = require('./logger')
 const logger = new LoggerFactory().logger
 
 const AppDAO = require('./db/dao')
-const UserRepo = require('./db/user-repository')
 const ConfigRepo = require('./db/config-repository')
+const UserRepo = require('./db/user-repository')
+const TokenRepo = require('./db/token-repository')
 
 class BootstrapService {
+  constructor () {
+    this.configRepo = new ConfigRepo()
+    this.userRepo = new UserRepo()
+    this.tokenRepo = new TokenRepo()
+  }
+
   start () {
     return new Promise((resolve, reject) => {
       logger.info('startup')
@@ -51,13 +58,13 @@ class BootstrapService {
   }
 
   createDB () {
-    const configRepo = new ConfigRepo()
-    const userRepo = new UserRepo()
-
     return new Promise((resolve, reject) => {
-      configRepo.createTable()
+      this.configRepo.createTable()
         .then(() => {
-          return userRepo.createTable()
+          return this.userRepo.createTable()
+        })
+        .then(() => {
+          return this.tokenRepo.createTable()
         })
         .then(() => {
           logger.info(`${consts.DB_NAME} created`)
@@ -78,10 +85,8 @@ class BootstrapService {
   }
 
   addConfigDBData () {
-    const configRepo = new ConfigRepo()
-
     return new Promise((resolve, reject) => {
-      configRepo.create('jwt_key', crypto.randomBytes(32).toString('hex'))
+      this.configRepo.create(consts.CONFIG_KEYS.JWT_TOKEN, crypto.randomBytes(32).toString('hex'))
         .then(() => {
           logger.info('config data inserted into db')
           resolve()
@@ -94,10 +99,8 @@ class BootstrapService {
   }
 
   addDevelopmentDBData () {
-    const userRepo = new UserRepo()
-
     return new Promise((resolve, reject) => {
-      userRepo.create('admin', bcrypt.hashSync('root', bcrypt.genSaltSync(10)))
+      this.userRepo.create('admin', bcrypt.hashSync('root', bcrypt.genSaltSync(10)))
         .then(() => {
           logger.info('development data inserted into db')
           resolve()
