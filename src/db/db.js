@@ -7,7 +7,7 @@ const consts = require('../config/consts.js')
 const Env = require('../util/env')
 const { resolve, reject } = require('bluebird')
 
-class AppDAO {
+class DB {
   constructor () {
     this.logger = LoggerFactory.Logger(this.constructor.name)
   }
@@ -67,4 +67,4 @@ class AppDAO {
   }
 }
 
-module.exports = new AppDAO()
+module.exports = new DB()

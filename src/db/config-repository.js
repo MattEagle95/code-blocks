@@ -1,27 +1,27 @@
 'use strict'
 
-const AppDAO = require('./dao')
+const DB = require('./db')
 
 class ConfigRepository {
   constructor () {
-    this.dao = AppDAO
+    this.db = DB
     this.tableName = 'Config'
   }
 
   getById (id) {
-    return this.dao.get(
+    return this.db.get(
       `SELECT * FROM ${this.tableName} WHERE id = ?`,
       [id])
   }
 
   getByConfigKey (configKey) {
-    return this.dao.get(
+    return this.db.get(
       `SELECT * FROM ${this.tableName} WHERE config_key = ?`,
       [configKey])
   }
 
   create (configKey, configValue) {
-    return this.dao.run(
+    return this.db.run(
       `INSERT INTO ${this.tableName} (config_key, config_value) VALUES (?, ?)`,
       [configKey, configValue])
   }
@@ -33,7 +33,7 @@ class ConfigRepository {
       config_key varchar(255) NOT NULL,
       config_value varchar(255) NOT NULL
     );`
-    return this.dao.run(sql)
+    return this.db.run(sql)
   }
 }
 

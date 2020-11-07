@@ -5,14 +5,14 @@ const crypto = require('crypto')
 const bcrypt = require('bcryptjs')
 const Promise = require('bluebird')
 
-const consts = require('../config/consts.js')
-const Env = require('../util/env')
-const LoggerFactory = require('..//util/logger-factory')
+const consts = require('./config/consts.js')
+const Env = require('./util/env')
+const LoggerFactory = require('./util/logger-factory')
 
-const AppDAO = require('../db/dao')
-const ConfigRepo = require('../db/config-repository')
-const UserRepo = require('../db/user-repository')
-const TokenRepo = require('../db/token-repository')
+const DB = require('./db/db')
+const ConfigRepo = require('./db/config-repository')
+const UserRepo = require('./db/user-repository')
+const TokenRepo = require('./db/token-repository')
 
 class BootstrapService {
   constructor () {
@@ -39,7 +39,7 @@ class BootstrapService {
         }
       }
 
-      AppDAO.init()
+      DB.init()
         .then(() => { return this.createDB() })
         .then(() => { return this.addConfigDBData() })
         .then(() => {

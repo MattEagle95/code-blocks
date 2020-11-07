@@ -1,32 +1,38 @@
 'use strict'
 
-const AppDAO = require('./dao')
+const DB = require('./db')
 
 class UserRepository {
   constructor () {
-    this.dao = AppDAO
+    this.db = DB
   }
 
-  getById (id) {
-    return this.dao.get(
+  findById (id) {
+    return this.db.get(
       'SELECT * FROM User WHERE id = ?',
       [id])
   }
 
-  getByName (name) {
-    return this.dao.get(
-      'SELECT * FROM User WHERE name = ?',
-      [name])
+  getAll () {
+    return this.db.get(
+      'SELECT * FROM User'
+    )
   }
 
   create (name, password) {
-    return this.dao.run(
+    return this.db.run(
       'INSERT INTO User (name, password) VALUES (?, ?)',
       [name, password])
   }
 
+  update (name, password) {
+    return this.db.run(
+      'UPDATE User SET name = ?, password = ?',
+      [name, password])
+  }
+
   delete (id) {
-    return this.dao.run(
+    return this.db.run(
       'DELETE FROM User WHERE id = ?',
       [id]
     )
@@ -39,7 +45,8 @@ class UserRepository {
       name varchar(255) NOT NULL,
       password varchar(255) NOT NULL
     );`
-    return this.dao.run(sql)
+
+    return this.db.run(sql)
   }
 }
 

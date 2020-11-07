@@ -1,39 +1,39 @@
 'use strict'
 
-const AppDAO = require('./dao')
+const DB = require('./db')
 
 class TokenRepository {
   constructor () {
-    this.dao = AppDAO
+    this.db = DB
     this.tableName = 'Token'
   }
 
   findByUserIdAndToken (userId, token) {
-    return this.dao.get(
+    return this.db.get(
       `SELECT * FROM ${this.tableName} WHERE user_id = ? AND token = ?`,
       [userId, token])
   }
 
   getById (id) {
-    return this.dao.get(
+    return this.db.get(
       `SELECT * FROM ${this.tableName} WHERE id = ?`,
       [id])
   }
 
   getByName (name) {
-    return this.dao.get(
+    return this.db.get(
       `SELECT * FROM ${this.tableName} WHERE name = ?`,
       [name])
   }
 
   create (userId, token) {
-    return this.dao.run(
+    return this.db.run(
       `INSERT INTO ${this.tableName} (user_id, token) VALUES (?, ?)`,
       [userId, token])
   }
 
   delete (id) {
-    return this.dao.run(
+    return this.db.run(
       `DELETE FROM ${this.tableName} WHERE id = ?`,
       [id]
     )
@@ -48,7 +48,7 @@ class TokenRepository {
 
       FOREIGN KEY(user_id) REFERENCES User(id)
     );`
-    return this.dao.run(sql)
+    return this.db.run(sql)
   }
 }
 
