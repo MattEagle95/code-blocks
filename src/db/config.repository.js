@@ -8,16 +8,15 @@ class ConfigRepository {
     this.tableName = 'Config'
   }
 
-  getById (id) {
+  findByUserIdAndToken (userId, token) {
     return this.db.get(
-      `SELECT * FROM ${this.tableName} WHERE id = ?`,
-      [id])
+      `SELECT * FROM ${this.tableName} WHERE user_id = ? AND token = ?`,
+      [userId, token])
   }
 
-  getByConfigKey (configKey) {
+  getAll () {
     return this.db.get(
-      `SELECT * FROM ${this.tableName} WHERE config_key = ?`,
-      [configKey])
+      `SELECT * FROM ${this.tableName}`)
   }
 
   create (configKey, configValue) {

@@ -1,12 +1,11 @@
 'use strict'
 
-const ConfigRepository = require('../db/config.repository')
-const TokenRepository = require('../db/token.repository')
-
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-
 const consts = require('../config/consts.js')
+
+const ConfigRepository = require('../db/config.repository')
+const TokenRepository = require('../db/token.repository')
 const UserService = require('../services/user.service')
 
 class AuthController {

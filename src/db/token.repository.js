@@ -14,16 +14,9 @@ class TokenRepository {
       [userId, token])
   }
 
-  getById (id) {
+  getAll () {
     return this.db.get(
-      `SELECT * FROM ${this.tableName} WHERE id = ?`,
-      [id])
-  }
-
-  getByName (name) {
-    return this.db.get(
-      `SELECT * FROM ${this.tableName} WHERE name = ?`,
-      [name])
+      `SELECT * FROM ${this.tableName}`)
   }
 
   create (userId, token) {

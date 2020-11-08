@@ -5,41 +5,42 @@ const DB = require('./db')
 class UserRepository {
   constructor () {
     this.db = DB
+    this.tableName = 'User'
   }
 
   findById (id) {
     return this.db.get(
-      'SELECT * FROM User WHERE id = ?',
+      `SELECT * FROM ${this.tableName} WHERE id = ?`,
       [id])
   }
 
   findByName (name) {
     return this.db.get(
-      'SELECT * FROM User WHERE name = ?',
+      `SELECT * FROM ${this.tableName} WHERE name = ?`,
       [name])
   }
 
   getAll () {
     return this.db.get(
-      'SELECT * FROM User'
+      `SELECT * FROM ${this.tableName}`
     )
   }
 
   create (name, password) {
     return this.db.run(
-      'INSERT INTO User (name, password) VALUES (?, ?)',
+      `INSERT INTO ${this.tableName} (name, password) VALUES (?, ?)`,
       [name, password])
   }
 
   update (name, password) {
     return this.db.run(
-      'UPDATE User SET name = ?, password = ?',
+      `UPDATE ${this.tableName} SET name = ?, password = ?`,
       [name, password])
   }
 
   delete (id) {
     return this.db.run(
-      'DELETE FROM User WHERE id = ?',
+      `DELETE FROM ${this.tableName} WHERE id = ?`,
       [id]
     )
   }

@@ -1,21 +1,20 @@
 'user strict'
 
 const Promise = require('bluebird')
-const bcrypt = require('bcryptjs')
+const ConfigRepository = require('../db/config.repository')
 const LoggerFactory = require('../util/logger-factory')
-const UserRepository = require('../db/user.repository')
 
-class UserService {
+class ConfigService {
   constructor () {
     this.logger = LoggerFactory.Logger(this.constructor.name)
-    this.userRepository = new UserRepository()
+    this.configRepository = new ConfigRepository()
   }
 
   findById (id) {
     return new Promise((resolve, reject) => {
-      this.userRepository.findById(id)
-        .then(user => {
-          resolve(user)
+      this.configRepository.findById(id)
+        .then(config => {
+          resolve(config)
         })
         .catch(error => {
           reject(error)
@@ -23,11 +22,11 @@ class UserService {
     })
   }
 
-  findByName (name) {
+  findByConfigKey (configKey) {
     return new Promise((resolve, reject) => {
-      this.userRepository.findByName(name)
-        .then(user => {
-          resolve(user)
+      this.configRepository.findByName(configKey)
+        .then(config => {
+          resolve(config)
         })
         .catch(error => {
           reject(error)
@@ -37,9 +36,9 @@ class UserService {
 
   getAll () {
     return new Promise((resolve, reject) => {
-      this.userRepository.getAll()
-        .then(users => {
-          resolve(users)
+      this.configRepository.getAll()
+        .then(configs => {
+          resolve(configs)
         })
         .catch(error => {
           reject(error)
@@ -47,11 +46,9 @@ class UserService {
     })
   }
 
-  create (name, password) {
+  create (configKey, configValue) {
     return new Promise((resolve, reject) => {
-      const passwordEncrypted = bcrypt.hashSync(password, bcrypt.genSaltSync(10))
-
-      this.userRepository.create(name, passwordEncrypted)
+      this.configRepository.create(configKey, configValue)
         .then(() => {
           resolve()
         })
@@ -63,7 +60,7 @@ class UserService {
 
   createTable () {
     return new Promise((resolve, reject) => {
-      this.userRepository.createTable()
+      this.configRepository.createTable()
         .then(() => {
           resolve()
         })
@@ -74,4 +71,4 @@ class UserService {
   }
 }
 
-module.exports = UserService
+module.exports = ConfigService
