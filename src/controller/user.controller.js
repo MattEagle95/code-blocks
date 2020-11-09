@@ -11,7 +11,9 @@ class UserController {
     return new Promise((resolve, reject) => {
       this.userService.getAll()
         .then(users => {
-          resolve(users)
+          console.log('users')
+          console.log(users)
+          resolve([users])
         })
         .catch(error => {
           reject(error)

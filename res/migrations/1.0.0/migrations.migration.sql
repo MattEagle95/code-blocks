@@ -1,0 +1,7 @@
+BEGIN TRANSACTION;
+CREATE TABLE IF NOT EXISTS Migrations (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  app_version varchar(255) NOT NULL,
+  db_version varchar(255) NOT NULL
+);
+COMMIT;

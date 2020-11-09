@@ -1,7 +1,7 @@
 'user strict'
 
 const Promise = require('bluebird')
-const TokenRepository = require('../db/token.repository')
+const TokenRepository = require('../db/repositories/token.repository')
 const LoggerFactory = require('../util/logger-factory')
 
 class TokenService {

@@ -4,8 +4,8 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const consts = require('../config/consts.js')
 
-const ConfigRepository = require('../db/config.repository')
-const TokenRepository = require('../db/token.repository')
+const ConfigRepository = require('../db/repositories/config.repository')
+const TokenRepository = require('../db/repositories/token.repository')
 const UserService = require('../services/user.service')
 
 class AuthController {
@@ -30,12 +30,16 @@ class AuthController {
 
           return user
         })
-        .then(_user => {
-          const user = _user
-          this.configRepository.getByConfigKey(consts.CONFIG_KEYS.JWT_TOKEN)
+        .then(user => {
+          return this.configRepository.findByConfigKey(consts.CONFIG_KEYS.JWT_TOKEN)
             .then(config => {
-              resolve({ user: user, token: jwt.sign({ id: user.id }, config.config_value) })
+              return new Promise((resolve, reject) => {
+                resolve({ user, config })
+              })
             })
+        })
+        .then(data => {
+          resolve(jwt.sign({ id: data.user.id }, data.config.config_value))
         })
         .catch(error => {
           reject(error)

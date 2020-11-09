@@ -1,6 +1,6 @@
 'use strict'
 
-const DB = require('./db')
+const DB = require('../db')
 
 class ConfigRepository {
   constructor () {
@@ -8,10 +8,10 @@ class ConfigRepository {
     this.tableName = 'Config'
   }
 
-  findByUserIdAndToken (userId, token) {
+  findByConfigKey (configKey) {
     return this.db.get(
-      `SELECT * FROM ${this.tableName} WHERE user_id = ? AND token = ?`,
-      [userId, token])
+      `SELECT * FROM ${this.tableName} WHERE config_key = ?`,
+      [configKey])
   }
 
   getAll () {

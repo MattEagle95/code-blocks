@@ -1,10 +1,10 @@
 'use strict'
 
-const DB = require('./db')
+const db = require('../db')
 
 class TokenRepository {
   constructor () {
-    this.db = DB
+    this.db = db
     this.tableName = 'Token'
   }
 

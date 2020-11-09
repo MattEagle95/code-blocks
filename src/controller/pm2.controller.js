@@ -18,7 +18,7 @@ class PM2Controller {
           reject(error)
         }
 
-        pm2.list((error, list) => {
+        return pm2.list((error, list) => {
           if (error) {
             this.logger.error(error)
             reject(error)

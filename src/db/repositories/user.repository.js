@@ -1,6 +1,6 @@
 'use strict'
 
-const DB = require('./db')
+const DB = require('../db')
 
 class UserRepository {
   constructor () {

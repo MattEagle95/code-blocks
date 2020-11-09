@@ -4,7 +4,9 @@ module.exports = Object.freeze({
   DB_NAME: 'db.sqlite3',
   FILE_PATH_LOGS: 'storage\\logs\\',
   FILE_PATH_DB: 'storage\\db\\db.sqlite3',
+  FILE_PATH_MIGRATIONS: 'res\\migrations\\',
   CONFIG_KEYS: {
+    DB_MIGRATION_VERSION: '',
     JWT_TOKEN: 'JWT_TOKEN'
   }
 })

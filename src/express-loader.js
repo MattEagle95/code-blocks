@@ -31,7 +31,7 @@ class ExpressLoader {
   }
 
   registerRoutes (app) {
-    app.use('/api', apiRoutes)
+    app.use('/pm2', apiRoutes)
     app.use('/auth', authRoutes)
     app.use('/user', userRoutes)
   }

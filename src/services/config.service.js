@@ -1,7 +1,7 @@
 'user strict'
 
 const Promise = require('bluebird')
-const ConfigRepository = require('../db/config.repository')
+const ConfigRepository = require('../db/repositories/config.repository')
 const LoggerFactory = require('../util/logger-factory')
 
 class ConfigService {
@@ -24,7 +24,7 @@ class ConfigService {
 
   findByConfigKey (configKey) {
     return new Promise((resolve, reject) => {
-      this.configRepository.findByName(configKey)
+      this.configRepository.findByConfigKey(configKey)
         .then(config => {
           resolve(config)
         })

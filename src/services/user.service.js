@@ -3,7 +3,7 @@
 const Promise = require('bluebird')
 const bcrypt = require('bcryptjs')
 const LoggerFactory = require('../util/logger-factory')
-const UserRepository = require('../db/user.repository')
+const UserRepository = require('../db/repositories/user.repository')
 
 class UserService {
   constructor () {
@@ -24,15 +24,7 @@ class UserService {
   }
 
   findByName (name) {
-    return new Promise((resolve, reject) => {
-      this.userRepository.findByName(name)
-        .then(user => {
-          resolve(user)
-        })
-        .catch(error => {
-          reject(error)
-        })
-    })
+    return this.userRepository.findByName(name)
   }
 
   getAll () {
