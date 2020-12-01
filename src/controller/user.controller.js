@@ -1,6 +1,7 @@
 'use strict'
 
 const UserService = require('../services/user.service')
+const { cpu, drive, mem, os } = require('node-os-utils')
 
 class UserController {
   constructor () {
@@ -11,8 +12,6 @@ class UserController {
     return new Promise((resolve, reject) => {
       this.userService.getAll()
         .then(users => {
-          console.log('users')
-          console.log(users)
           resolve([users])
         })
         .catch(error => {
@@ -40,6 +39,35 @@ class UserController {
           resolve()
         })
         .catch(error => {
+          reject(error)
+        })
+    })
+  }
+
+  systeminfo () {
+    return new Promise((resolve, reject) => {
+      cpu.usage()
+        .then(cpuPercentage => {
+          return cpuPercentage
+        })
+        .then(cpuPercentage => {
+          return mem.info()
+            .then(info => {
+              return [cpuPercentage, info]
+            })
+        })
+        .then(function ([cpuPercentage, info]) {
+          return os.oos()
+            .then(oos => {
+              return [cpuPercentage, info, oos]
+            })
+        })
+        .then(function ([cpuPercentage, info, oos]) {
+          console.log('resolve')
+          resolve([cpuPercentage, info, os.uptime(), oos, os.platform()])
+        })
+        .catch(error => {
+          console.log(error)
           reject(error)
         })
     })

@@ -1,0 +1,1 @@
+(()=>{"use strict";global.__basedir=__dirname;const r=require("./src/bootstrap"),e=require("./src/express-loader"),s=new r,t=new e;s.start().then((()=>{t.start()}))})();

@@ -30,7 +30,7 @@ class BootstrapService {
       if (Env.checkNodeEnvDevelopment()) {
         this.deleteDB()
       } else {
-        if (this.checkDBFileExists()) {
+        if (!this.checkDBFileExists()) {
           this.logger.info(`no ${consts.DB_NAME} file found. creating a new one.`)
         } else {
           this.logger.info(`${consts.DB_NAME} file found`)
@@ -99,7 +99,13 @@ class BootstrapService {
 
   addDevelopmentDBData () {
     return new Promise((resolve, reject) => {
-      this.userService.create('admin', 'root')
+      this.userService.create('admin2', 'root')
+        .then(() => {
+          return this.userService.create('test', 'root')
+        })
+        .then(() => {
+          return this.userService.create('test2', 'root')
+        })
         .then(() => {
           this.logger.info('development data inserted into db')
           resolve()

@@ -26,6 +26,15 @@ class DB {
     })
   }
 
+  disconnect () {
+    this.db.close((err) => {
+      if (err) {
+        return console.error(err.message)
+      }
+      this.logger.info('closed the database connection')
+    })
+  }
+
   run (sql, params = []) {
     return new Promise((resolve, reject) => {
       this.db.run(sql, params, function (err) {
@@ -55,14 +64,16 @@ class DB {
   }
 
   all (sql, params = []) {
-    this.db.all(sql, params, (err, rows) => {
-      if (err) {
-        console.log('Error running sql: ' + sql)
-        console.log(err)
-        reject(err)
-      } else {
-        resolve(rows)
-      }
+    return new Promise((resolve, reject) => {
+      this.db.all(sql, params, (err, rows) => {
+        if (err) {
+          console.log('Error running sql: ' + sql)
+          console.log(err)
+          reject(err)
+        } else {
+          resolve(rows)
+        }
+      })
     })
   }
 }

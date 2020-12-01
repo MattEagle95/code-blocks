@@ -21,7 +21,7 @@ class UserRepository {
   }
 
   getAll () {
-    return this.db.get(
+    return this.db.all(
       `SELECT * FROM ${this.tableName}`
     )
   }

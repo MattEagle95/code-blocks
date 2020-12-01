@@ -17,6 +17,18 @@ router.get('/', (req, res) => {
     })
 })
 
+router.get('/systeminfo', (req, res) => {
+  userController.systeminfo()
+    .then(systeminfo => {
+      console.log('systeminfo')
+      console.log(systeminfo)
+      res.status(201).send(systeminfo)
+    })
+    .catch(error => {
+      res.status(400).send(error)
+    })
+})
+
 router.get('/:id', [
   param('id').isInt()
 ], validateMiddleware, (req, res) => {

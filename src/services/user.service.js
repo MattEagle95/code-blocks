@@ -40,6 +40,7 @@ class UserService {
   }
 
   create (name, password) {
+    this.logger.info('create ' + name)
     return new Promise((resolve, reject) => {
       const passwordEncrypted = bcrypt.hashSync(password, bcrypt.genSaltSync(10))
 
