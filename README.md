@@ -1,3 +1,4 @@
+<p align="center">
 # code-blocks
 
 ![Node.js CI](https://github.com/MattEagle95/code-blocks/workflows/Node.js%20CI/badge.svg)
@@ -8,3 +9,4 @@
 - user and role management
 - statistics and charts
 - notifications (email)
+</p>
