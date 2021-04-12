@@ -24,7 +24,7 @@ class UserService {
   }
 
   findByName (name) {
-    return this.userRepository.findByName(name)
+    return this.userRepository.findByEmail(name)
   }
 
   getAll () {
@@ -40,13 +40,13 @@ class UserService {
   }
 
   create (name, password) {
-    this.logger.info('create ' + name)
     return new Promise((resolve, reject) => {
       const passwordEncrypted = bcrypt.hashSync(password, bcrypt.genSaltSync(10))
 
       this.userRepository.create(name, passwordEncrypted)
-        .then(() => {
-          resolve()
+        .then(data => {
+          this.logger.info('create ' + name + ' id ' + data.id)
+          resolve(data.id)
         })
         .catch(error => {
           reject(error)

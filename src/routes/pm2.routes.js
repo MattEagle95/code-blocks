@@ -6,7 +6,6 @@ const router = require('express').Router()
 const pm2Controller = new PM2Controller()
 
 router.get('/list', authMiddleware, (req, res) => {
-  console.log('call to list')
   pm2Controller.list()
     .then(list => {
       res.status(201).send(list)

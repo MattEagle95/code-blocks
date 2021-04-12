@@ -7,15 +7,17 @@ const consts = require('../config/consts.js')
 const ConfigRepository = require('../db/repositories/config.repository')
 const TokenRepository = require('../db/repositories/token.repository')
 const UserService = require('../services/user.service')
+const LoggerFactory = require('../util/logger-factory')
 
 class AuthController {
-  constructor () {
+  constructor() {
+    this.auditLogger = LoggerFactory.AuditLogger('authRoutes')
     this.userService = new UserService()
     this.configRepository = new ConfigRepository()
     this.tokenRepository = new TokenRepository()
   }
 
-  auth (name, _password) {
+  auth(name, _password) {
     const password = _password
     return new Promise((resolve, reject) => {
       this.userService.findByName(name)
@@ -39,7 +41,7 @@ class AuthController {
             })
         })
         .then(data => {
-          resolve(jwt.sign({ id: data.user.id }, data.config.config_value))
+          resolve({userId: data.user.id, token: jwt.sign({ id: data.user.id }, data.config.config_value)})
         })
         .catch(error => {
           reject(error)

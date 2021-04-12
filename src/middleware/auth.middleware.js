@@ -3,8 +3,10 @@ const jwt = require('jsonwebtoken')
 const consts = require('../config/consts')
 const ConfigRepository = require('../db/repositories/config.repository')
 const TokenRepository = require('../db/repositories/token.repository')
+const LoggerFactory = require('../util/logger-factory')
 
 const authMiddleware = async (req, res, next) => {
+  const logger = LoggerFactory.AuditLogger('authMiddleware')
   const tokenRepo = new TokenRepository()
   const configRepo = new ConfigRepository()
 
@@ -16,16 +18,16 @@ const authMiddleware = async (req, res, next) => {
 
         tokenRepo.findByUserIdAndToken(data.id, token)
           .then(token => {
-            console.log('found')
             req.token = token
+            res.locals.userId = data.id;  
             next()
           })
           .catch(error => {
-            res.status(401).status({ error: error })
+            res.status(401).send({ error: error })
           })
       } catch (err) {
-        console.log('err: ' + err)
-        reject(err)
+        logger.debug('request failed, unauthenticated')
+        res.status(401).send({ error: err })
       }
     })
 }

@@ -5,6 +5,10 @@
 
 # features
 - no external db required (sqlite3)
+-- multiple can be used via sequelize (postgre, mysql)
 - user and role management
-- statistics and charts
 - notifications (email)
+- auditlog
+
+# development
+- seed npx sequelize-cli db:seed:all

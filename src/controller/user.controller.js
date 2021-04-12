@@ -1,26 +1,19 @@
 'use strict'
 
 const UserService = require('../services/user.service')
-const { cpu, drive, mem, os } = require('node-os-utils')
+const { cpu, mem, os } = require('node-os-utils')
+const db = require('../database/models/')
 
 class UserController {
-  constructor () {
+  constructor() {
     this.userService = new UserService()
   }
 
-  get () {
-    return new Promise((resolve, reject) => {
-      this.userService.getAll()
-        .then(users => {
-          resolve([users])
-        })
-        .catch(error => {
-          reject(error)
-        })
-    })
+  get() {
+    return db.models.User.findAll()
   }
 
-  find (id) {
+  find(id) {
     return new Promise((resolve, reject) => {
       this.userService.findById(id)
         .then(user => {
@@ -32,7 +25,7 @@ class UserController {
     })
   }
 
-  create (name, password) {
+  create(name, password) {
     return new Promise((resolve, reject) => {
       this.userService.create(name, password)
         .then(() => {
@@ -44,7 +37,7 @@ class UserController {
     })
   }
 
-  systeminfo () {
+  systeminfo() {
     return new Promise((resolve, reject) => {
       cpu.usage()
         .then(cpuPercentage => {
@@ -63,7 +56,6 @@ class UserController {
             })
         })
         .then(function ([cpuPercentage, info, oos]) {
-          console.log('resolve')
           resolve([cpuPercentage, info, os.uptime(), oos, os.platform()])
         })
         .catch(error => {
@@ -73,19 +65,33 @@ class UserController {
     })
   }
 
-  update (id, name, password) {
+  update(id, email) {
     return new Promise((resolve, reject) => {
-      this.userService.update(id, name, password)
-        .then(() => {
-          resolve()
-        })
-        .catch(error => {
-          reject(error)
-        })
+      resolve()
+      // this.userService.update(id, email)
+      //   .then(() => {
+      //     resolve()
+      //   })
+      //   .catch(error => {
+      //     reject(error)
+      //   })
     })
   }
 
-  delete (id) {
+  updatePassword(id, password) {
+    return new Promise((resolve, reject) => {
+      resolve()
+      // this.userService.updatePassword(id, password)
+      //   .then(() => {
+      //     resolve()
+      //   })
+      //   .catch(error => {
+      //     reject(error)
+      //   })
+    })
+  }
+
+  delete(id) {
     return new Promise((resolve, reject) => {
       this.userService.delete(id)
         .then(() => {

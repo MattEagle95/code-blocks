@@ -1,121 +1,80 @@
 'use strict'
 
-const fs = require('fs')
-const crypto = require('crypto')
 const Promise = require('bluebird')
-
 const consts = require('./config/consts.js')
 const Env = require('./util/env')
 const LoggerFactory = require('./util/logger-factory')
-
-const DB = require('./db/db')
-const TokenService = require('./services/token.service.js')
-const UserService = require('./services/user.service.js')
-const ConfigService = require('./services/config.service.js')
+const db = require('./database/models')
+const ExpressLoader = require('./express-loader')
 
 class BootstrapService {
   constructor () {
     this.logger = LoggerFactory.Logger(this.constructor.name)
-    this.configService = new ConfigService()
-    this.userService = new UserService()
-    this.tokenService = new TokenService()
+    this.expressLoader = new ExpressLoader()
   }
 
-  start () {
-    return new Promise((resolve, reject) => {
-      this.logger.info('startup')
-
-      this.checkEnvironment()
-
-      if (Env.checkNodeEnvDevelopment()) {
-        this.deleteDB()
-      } else {
-        if (!this.checkDBFileExists()) {
-          this.logger.info(`no ${consts.DB_NAME} file found. creating a new one.`)
-        } else {
-          this.logger.info(`${consts.DB_NAME} file found`)
-          return resolve()
-        }
-      }
-
-      DB.init()
-        .then(() => { return this.createDB() })
-        .then(() => { return this.addConfigDBData() })
-        .then(() => {
-          if (Env.checkNodeEnvDevelopment()) {
-            this.addDevelopmentDBData()
-              .then(() => resolve())
-          } else {
-            resolve()
-          }
-        })
-    })
-  }
-
-  checkDBFileExists () {
-    return fs.existsSync(Env.getAbsolutePath(consts.FILE_PATH_DB))
-  }
-
-  createDB () {
-    return new Promise((resolve, reject) => {
-      this.configService.createTable()
-        .then(() => {
-          return this.userService.createTable()
-        })
-        .then(() => {
-          return this.tokenService.createTable()
-        })
-        .then(() => {
-          this.logger.info(`${consts.DB_NAME} created`)
-          resolve()
-        })
-        .catch(error => {
-          this.logger.error('startup error: ' + error)
-          reject(error)
-        })
-    })
-  }
-
-  deleteDB () {
-    if (this.checkDBFileExists()) {
-      fs.unlinkSync(Env.getAbsolutePath(consts.FILE_PATH_DB))
-      this.logger.info(`${consts.DB_NAME} deleted`)
+  async assertDatabaseConnectionOk () {
+    try {
+      await db.sequelize.authenticate()
+      this.logger.info('database connected')
+      await db.sequelize.sync({ force: true })
+      // await db.models.User.create({ email: 'admin', password: 'test' })
+      // await db.models.Role.create({ name: 'admin-role' })
+      // return db.models.Role.findByPk(1).then((role) => {
+      //   db.models.User.findByPk(1).then((user) => {
+      //     user.addRole(role).then(() => {
+      //       db.models.User.findAll({ raw: true }).then((users) => {
+      //         console.log('Database connection OK!');
+      //         console.log(users)
+      //       })
+      //     })
+      //   })
+      // });
+    } catch (error) {
+      this.logger.error(`unable to connect to database: ${error.message}`)
     }
   }
 
-  addConfigDBData () {
-    return new Promise((resolve, reject) => {
-      this.configService.create(consts.CONFIG_KEYS.JWT_TOKEN, crypto.randomBytes(32).toString('hex'))
-        .then(() => {
-          this.logger.info('config data inserted into db')
-          resolve()
-        })
-        .catch(error => {
-          this.logger.error('startup error: ' + error)
-          reject(error)
-        })
+  async init () {
+    this.logger.info('startup')
+
+    this.checkEnvironment()
+    await this.assertDatabaseConnectionOk()
+
+    const exec = require('child_process').exec
+
+    const cmd = exec('npm run-script db:seed', function (err, stdout, stderr) {
+      if (err) {
+        // handle error
+      }
+      console.log(stdout)
     })
+
+    await new Promise((resolve, reject) => {
+      cmd.on('exit', function (code) {
+        console.log('exit')
+        resolve()
+      })
+    })
+
+    await this.expressLoader.init()
+
+    this.logger.info('startup complete')
   }
 
-  addDevelopmentDBData () {
-    return new Promise((resolve, reject) => {
-      this.userService.create('admin2', 'root')
-        .then(() => {
-          return this.userService.create('test', 'root')
-        })
-        .then(() => {
-          return this.userService.create('test2', 'root')
-        })
-        .then(() => {
-          this.logger.info('development data inserted into db')
-          resolve()
-        })
-        .catch(error => {
-          this.logger.error('startup error: ' + error)
-          reject(error)
-        })
-    })
-  }
+  // addConfigDBData() {
+  //   return new Promise((resolve, reject) => {
+  //     this.configService.create(consts.CONFIG_KEYS.JWT_TOKEN, crypto.randomBytes(32).toString('hex'))
+  //       .then(() => {
+  //         this.logger.info('config data inserted into db')
+  //         resolve()
+  //       })
+  //       .catch(error => {
+  //         this.logger.error('startup error: ' + error)
+  //         reject(error)
+  //       })
+  //   })
+  // }
 
   checkEnvironment () {
     if (!Env.getNodeEnv()) {

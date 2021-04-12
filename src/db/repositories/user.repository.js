@@ -14,10 +14,10 @@ class UserRepository {
       [id])
   }
 
-  findByName (name) {
+  findByEmail (email) {
     return this.db.get(
-      `SELECT * FROM ${this.tableName} WHERE name = ?`,
-      [name])
+      `SELECT * FROM ${this.tableName} WHERE email = ?`,
+      [email])
   }
 
   getAll () {
@@ -26,16 +26,16 @@ class UserRepository {
     )
   }
 
-  create (name, password) {
+  create (email, password) {
     return this.db.run(
-      `INSERT INTO ${this.tableName} (name, password) VALUES (?, ?)`,
-      [name, password])
+      `INSERT INTO ${this.tableName} (email, password, lastLogin, registrationDate) VALUES (?, ?, ?, ?)`,
+      [email, password, new Date(), new Date()])
   }
 
-  update (name, password) {
+  update (email, password) {
     return this.db.run(
-      `UPDATE ${this.tableName} SET name = ?, password = ?`,
-      [name, password])
+      `UPDATE ${this.tableName} SET email = ?, password = ?`,
+      [email, password])
   }
 
   delete (id) {
@@ -49,8 +49,10 @@ class UserRepository {
     const sql = `
     CREATE TABLE IF NOT EXISTS User (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name varchar(255) NOT NULL,
-      password varchar(255) NOT NULL
+      email varchar(255) NOT NULL,
+      password varchar(255) NOT NULL,
+      lastLogin varchar(255) NOT NULL,
+      registrationDate varchar(255) NOT NULL
     );`
 
     return this.db.run(sql)
