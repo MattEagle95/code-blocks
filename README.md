@@ -3,9 +3,12 @@ An easy to use PM2-UI with extended features
 
 ![Node.js CI](https://github.com/MattEagle95/code-blocks/workflows/Node.js%20CI/badge.svg)
 [![GitHub release](https://img.shields.io/github/release/MattEagle95/code-blocks.svg)](https://github.com/MattEagle95/code-blocks/releases/)
-![npm](https://img.shields.io/npm/dw/socket.io)
-![GitHub all releases](https://img.shields.io/github/downloads/matteagle95/code-blocks/total)
 [![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/Naereen/StrapDown.js/blob/master/LICENSE)
+
+# Links
+- website
+- documentation
+- npm
 
 # features
 - easy to use react material-ui
@@ -16,6 +19,11 @@ An easy to use PM2-UI with extended features
 -- auditlog
 - notifications (email)
 
+# releases
+- 1.0.0
+
 # installation
+- npm install 
+- npm start
 
 # usage
