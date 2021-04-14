@@ -1,11 +1,13 @@
 'use strict'
 
-const Promise = require('bluebird')
+const fs = require('fs')
+const crypto = require('crypto')
 const consts = require('./config/consts.js')
 const Env = require('./util/env')
 const LoggerFactory = require('./util/logger-factory')
 const db = require('./database/models')
 const ExpressLoader = require('./express-loader')
+const config = require('../storage/config/config.json')
 
 class BootstrapService {
   constructor () {
@@ -39,42 +41,36 @@ class BootstrapService {
     this.logger.info('startup')
 
     this.checkEnvironment()
+
+    const newConfig = {
+      ...config,
+      JWT_TOKEN: crypto.randomBytes(32).toString('hex')
+    }
+    fs.writeFileSync(consts.FILE_PATH_CONFIG, JSON.stringify(newConfig))
+    this.logger.info('config file created')
+
     await this.assertDatabaseConnectionOk()
 
-    const exec = require('child_process').exec
+    // const exec = require('child_process').exec
 
-    const cmd = exec('npm run-script db:seed', function (err, stdout, stderr) {
-      if (err) {
-        // handle error
-      }
-      console.log(stdout)
-    })
+    // const cmd = exec('npm run-script db:seed', function (err, stdout, stderr) {
+    //   if (err) {
+    //     // handle error
+    //   }
+    //   console.log(stdout)
+    // })
 
-    await new Promise((resolve, reject) => {
-      cmd.on('exit', function (code) {
-        console.log('exit')
-        resolve()
-      })
-    })
+    // await new Promise((resolve, reject) => {
+    //   cmd.on('exit', function (code) {
+    //     console.log('exit')
+    //     resolve()
+    //   })
+    // })
 
     await this.expressLoader.init()
 
     this.logger.info('startup complete')
   }
-
-  // addConfigDBData() {
-  //   return new Promise((resolve, reject) => {
-  //     this.configService.create(consts.CONFIG_KEYS.JWT_TOKEN, crypto.randomBytes(32).toString('hex'))
-  //       .then(() => {
-  //         this.logger.info('config data inserted into db')
-  //         resolve()
-  //       })
-  //       .catch(error => {
-  //         this.logger.error('startup error: ' + error)
-  //         reject(error)
-  //       })
-  //   })
-  // }
 
   checkEnvironment () {
     if (!Env.getNodeEnv()) {

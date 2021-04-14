@@ -33,7 +33,11 @@
     "pino": "^6.11.2",
     "pm2": "^4.5.0",
     "sequelize": "^6.6.2",
+    "socket.io": "^4.0.1",
     "sqlite3": "^5.0.0",
+    "swagger-autogen": "^2.7.9",
+    "swagger-jsdoc": "^6.0.0",
+    "swagger-ui-express": "^4.1.6",
     "validator": "^13.1.17",
     "winston": "^3.3.3",
     "winston-daily-rotate-file": "^4.5.0"

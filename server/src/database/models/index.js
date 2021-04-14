@@ -9,7 +9,7 @@ const sequelize = new Sequelize({
   dialect: config.development.dialect,
   storage: config.development.storage,
   define: { freezeTableName: true },
-  logging: true
+  logging: false
 })
 const models = {}
 
