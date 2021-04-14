@@ -20,6 +20,7 @@
     "configstore": "^5.0.1",
     "cors": "^2.8.5",
     "crypto-js": "^4.0.0",
+    "eslint-plugin-jest": "^24.3.5",
     "express": "^4.17.1",
     "express-rate-limit": "^5.2.6",
     "express-validator": "^6.6.1",

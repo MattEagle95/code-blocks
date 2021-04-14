@@ -66,25 +66,25 @@ const logger = winston.createLogger({
     transports.info
   ],
   exitOnError: false
-});
+})
 
 const auditLogger = winston.createLogger({
   transports: [
     transports.console,
     transports.error,
     transports.info,
-    transports.audit,
+    transports.audit
   ],
   exitOnError: false
-});
+})
 
 class LoggerFactory {
-  static Logger(moduleName = 'undefined') {
-    return logger.child({ moduleName: moduleName, logType: 'default' });
+  static Logger (moduleName = 'undefined') {
+    return logger.child({ moduleName: moduleName, logType: 'default' })
   }
 
-  static AuditLogger(moduleName = 'undefined') {
-    return auditLogger.child({ moduleName: moduleName, logType: 'audit' });
+  static AuditLogger (moduleName = 'undefined') {
+    return auditLogger.child({ moduleName: moduleName, logType: 'audit' })
   }
 }
 
