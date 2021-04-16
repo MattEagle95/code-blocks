@@ -10,6 +10,9 @@
     "test": "jest --ci --coverage",
     "db:seed": "npx sequelize-cli db:seed:all"
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/blitzo"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
