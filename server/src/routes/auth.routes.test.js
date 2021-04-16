@@ -13,18 +13,3 @@ test('should return 422 when no email and password is given', async (done) => {
       })
   })
 })
-
-test('should return 400 when user not found', async (done) => {
-  const expressLoader = new ExpressLoader()
-  expressLoader.init().then((app) => {
-    request(app)
-      .post('/auth/login')
-      .auth('invisible', '123')
-      .expect(400)
-      .then(response => {
-        expect(response.body.email).toBe()
-        done()
-      })
-      .catch(err => done(err))
-  })
-})
