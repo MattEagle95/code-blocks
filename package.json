@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon index",
     "start": "cross-env NODE_ENV=production node index",
-    "test": "jest --ci --coverage --maxWorkers=1",
+    "test": "jest --ci --coverage",
     "db:seed": "npx sequelize-cli db:seed:all"
   },
   "author": "",
