@@ -67,7 +67,7 @@ class ExpressLoader {
       app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
       app.listen(port, () => {
-        resolve()
+        resolve(app)
         this.logger.info(`server listening on port: ${port}`)
       })
     })

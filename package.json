@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon index",
     "start": "cross-env NODE_ENV=production node index",
-    "test": "jest --ci --coverage",
+    "test": "jest --ci --coverage --maxWorkers=1",
     "db:seed": "npx sequelize-cli db:seed:all"
   },
   "author": "",
@@ -36,6 +36,7 @@
     "sequelize": "^6.6.2",
     "socket.io": "^4.0.1",
     "sqlite3": "^5.0.0",
+    "supertest": "^6.1.3",
     "swagger-autogen": "^2.7.9",
     "swagger-jsdoc": "^6.0.0",
     "swagger-ui-express": "^4.1.6",
