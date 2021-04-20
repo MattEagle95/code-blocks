@@ -1,6 +1,6 @@
 <<<
 essWatcher
-In easy to use PM2-UI with extended features
+In easy to use PMf gh2-UI with extended features
 
 ![Node.js CI](https://github.com/MattEagle95/code-blocks/workflows/Node.js%20CI/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/MattEagle95/code-blocks/badge.svg)](https://coveralls.io/github/MattEagle95/code-blocks)
