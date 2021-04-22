@@ -8,15 +8,13 @@ A simple UI for pm2, with extended features.
 [![GitHub release](https://img.shields.io/github/release/MattEagle95/code-blocks.svg)](https://github.com/MattEagle95/code-blocks/releases/)
 [![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/Naereen/StrapDown.js/blob/master/LICENSE)
 
-# Contents
 - [Website](#about)
-
 - [About](#about)
 - [Installation](#installation)
 - [Documentation](#documentation)
 - [Licence](#licence)
 
-# About
+## About
 - easy to use react material-ui
 - manage multiple pm2 instances in one ui
 - uses socket.io to listen for pm2 events
@@ -25,18 +23,20 @@ A simple UI for pm2, with extended features.
 -- auditlog
 - notifications (email)
 
-# Installation
-- easy to use react material-ui
-- manage multiple pm2 instances in one ui
-- uses socket.io to listen for pm2 events
-- user and role management (jwt)
--- supports multiple databases (sqlite3, postgresql, mysql)
--- auditlog
-- notifications (email)
+## Installation
+1. Install the package
+```
+npm install processwatcher -g
+```
 
-# Documentation
+2. run the package
+```
+processwatcher start
+```
+
+## Documentation
 Please refer to the documentation website on [test](#about).
 
-# Licence
+## Licence
 MIT
 
