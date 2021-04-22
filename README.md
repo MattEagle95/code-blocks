@@ -1,20 +1,19 @@
 # ProcessWatcher
 
+A simple UI for pm2, with extended features.
+
 ![Node.js CI](https://github.com/MattEagle95/code-blocks/workflows/Node.js%20CI/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/MattEagle95/code-blocks/badge.svg)](https://coveralls.io/github/MattEagle95/code-blocks)
 ![npm](https://img.shields.io/npm/v/npm)
 [![GitHub release](https://img.shields.io/github/release/MattEagle95/code-blocks.svg)](https://github.com/MattEagle95/code-blocks/releases/)
 [![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/Naereen/StrapDown.js/blob/master/LICENSE)
 
-A simple UI for pm2, with extended features.
-- [Website](#about)
-- [Documentation](#documentation)
-
 # Contents
+- [Website](#about)
+
 - [About](#about)
 - [Installation](#installation)
 - [Documentation](#documentation)
-- [Links](#links)
 - [Licence](#licence)
 
 # About
